@@ -33,10 +33,48 @@ get_current_version() {
         exit 1
     fi
     
-    # Extract version, handling both project version and inherited parent version
-    local version=$(xmllint --xpath "string(/project/version)" "$POM_PATH" 2>/dev/null)
+    local version=""
+    
+    # Try xmllint first (most reliable)
+    if command -v xmllint > /dev/null 2>&1; then
+        version=$(xmllint --xpath "string(/project/version)" "$POM_PATH" 2>/dev/null || echo "")
+    fi
+    
+    # Fallback to awk/sed if xmllint not available or failed
     if [ -z "$version" ]; then
-        version=$(xmllint --xpath "string(/project/parent/version)" "$POM_PATH" 2>/dev/null)
+        version=$(awk '
+        /<project[^>]*>/ { in_project = 1; next }
+        /<parent>/ { if (in_project) in_parent = 1; next }
+        /<\/parent>/ { in_parent = 0; next }
+        /<version>/ {
+            if (in_project && !in_parent && !found_version) {
+                gsub(/<[^>]*>/, "")
+                gsub(/^[[:space:]]+|[[:space:]]+$/, "")
+                if (length($0) > 0) {
+                    found_version = 1
+                    print $0
+                    exit
+                }
+            }
+        }
+        ' "$POM_PATH")
+    fi
+    
+    # Final fallback using simple grep/sed - skip parent section
+    if [ -z "$version" ]; then
+        version=$(awk '
+        /<parent>/{parent=1; next} 
+        /<\/parent>/{parent=0; next} 
+        !parent && /<version>/{
+            gsub(/<[^>]*>/, ""); 
+            gsub(/^[[:space:]]*|[[:space:]]*$/, ""); 
+            if(length($0) > 0) {print; exit}
+        }' "$POM_PATH")
+    fi
+    
+    if [ -z "$version" ]; then
+        print_error "Could not extract version from pom.xml"
+        return 1
     fi
     
     # Remove -SNAPSHOT suffix for processing
@@ -84,11 +122,11 @@ analyze_commits() {
     if [ -z "$last_tag" ]; then
         # No tags found, analyze all commits
         commit_range="HEAD"
-        print_info "No previous tags found, analyzing all commits"
+        print_info "No previous tags found, analyzing all commits" >&2
     else
         # Analyze commits since last tag
         commit_range="$last_tag..HEAD"
-        print_info "Analyzing commits since tag: $last_tag"
+        print_info "Analyzing commits since tag: $last_tag" >&2
     fi
     
     # Get all commit messages in the range
@@ -107,15 +145,15 @@ analyze_commits() {
         # Check for breaking changes
         if [[ "$commit" =~ ^[a-z]+(\(.+\))?!:|BREAKING[[:space:]]CHANGE:|^[a-z]+!:|!: ]]; then
             has_breaking=true
-            print_info "Found breaking change: $commit"
+            print_info "Found breaking change: $commit" >&2
         # Check for features
         elif [[ "$commit" =~ ^feat(\(.+\))?: ]]; then
             has_feat=true
-            print_info "Found feature: $commit"
+            print_info "Found feature: $commit" >&2
         # Check for fixes
         elif [[ "$commit" =~ ^fix(\(.+\))?: ]]; then
             has_fix=true
-            print_info "Found fix: $commit"
+            print_info "Found fix: $commit" >&2
         fi
     done <<< "$commits"
     
@@ -150,7 +188,7 @@ update_pom_version() {
         rm "$POM_PATH.bak"
     fi
     
-    print_info "Updated pom.xml version to: $snapshot_version"
+    print_info "Updated pom.xml version to: $snapshot_version" >&2
 }
 
 # Main function
@@ -211,39 +249,39 @@ main() {
     fi
     
     local current_version=$(get_current_version)
-    print_info "Current version: $current_version"
+    print_info "Current version: $current_version" >&2
     
     local bump_type
     if [ -n "$force_bump" ]; then
         bump_type=$force_bump
-        print_info "Forced bump type: $bump_type"
+        print_info "Forced bump type: $bump_type" >&2
     else
-        bump_type=$(analyze_commits)
-        print_info "Determined bump type: $bump_type"
+        bump_type=$(analyze_commits 2>&2)
+        print_info "Determined bump type: $bump_type" >&2
     fi
     
     if [ "$bump_type" = "none" ]; then
-        print_warn "No version bump needed based on commit analysis"
-        echo "Current version remains: $current_version-SNAPSHOT"
+        print_warn "No version bump needed based on commit analysis" >&2
+        echo "Current version remains: $current_version-SNAPSHOT" >&2
         exit 0
     fi
     
     local new_version=$(increment_version "$current_version" "$bump_type")
     
-    echo ""
-    echo -e "${BLUE}Version Update Summary:${NC}"
-    echo "  Current: $current_version-SNAPSHOT"
-    echo "  New:     $new_version-SNAPSHOT"
-    echo "  Bump:    $bump_type"
-    echo ""
+    echo "" >&2
+    echo -e "${BLUE}Version Update Summary:${NC}" >&2
+    echo "  Current: $current_version-SNAPSHOT" >&2
+    echo "  New:     $new_version-SNAPSHOT" >&2
+    echo "  Bump:    $bump_type" >&2
+    echo "" >&2
     
     if [ "$dry_run" = true ]; then
-        print_info "Dry run mode - no changes made"
+        print_info "Dry run mode - no changes made" >&2
         exit 0
     fi
     
     # Update pom.xml
-    update_pom_version "$new_version"
+    update_pom_version "$new_version" >&2
     
     # Output new version for use by other scripts
     echo "$new_version"

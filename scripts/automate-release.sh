@@ -111,10 +111,10 @@ analyze_version_bump() {
         return 0
     fi
     
-    local bump_analysis
-    bump_analysis=$("$SCRIPTS_DIR/semantic-version.sh" --dry-run 2>/dev/null | tail -1 || echo "none")
+    # Run semantic analysis and capture bump type from stderr
+    local bump_output=$("$SCRIPTS_DIR/semantic-version.sh" --dry-run 2>&1)
     
-    if [[ "$bump_analysis" =~ [0-9]+\.[0-9]+\.[0-9]+ ]]; then
+    if echo "$bump_output" | grep -q "Determined bump type: minor\|Determined bump type: major\|Determined bump type: patch"; then
         echo "auto"
     else
         echo "none"
@@ -132,20 +132,23 @@ update_project_version() {
         if [ "$DRY_RUN" = true ]; then
             print_info "Would update version to: $new_version-SNAPSHOT"
         else
-            "$SCRIPTS_DIR/update-pom-version.sh" --version "$new_version"
+            "$SCRIPTS_DIR/update-pom-version.sh" --version "$new_version" >&2
         fi
+        echo "$new_version"
     elif [ "$bump_type" = "auto" ]; then
         if [ "$DRY_RUN" = true ]; then
-            "$SCRIPTS_DIR/semantic-version.sh" --dry-run
+            "$SCRIPTS_DIR/semantic-version.sh" --dry-run >&2
+            # Extract new version from the output 
+            local new_ver=$(echo "$("$SCRIPTS_DIR/semantic-version.sh" --dry-run 2>&1)" | grep "New:" | sed 's/.*New: *\([0-9.]*\).*/\1/')
+            echo "$new_ver"
         else
             new_version=$("$SCRIPTS_DIR/semantic-version.sh")
+            echo "$new_version"
         fi
     else
         print_warn "No version bump needed based on commit analysis"
         return 1
     fi
-    
-    echo "$new_version"
 }
 
 # Function to generate changelog
