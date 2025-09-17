@@ -22,6 +22,9 @@ public class CountryCodeService {
         COUNTRY_CODES.put("Brazil", "+55");
         COUNTRY_CODES.put("Mexico", "+52");
         COUNTRY_CODES.put("Argentina", "+54");
+        COUNTRY_CODES.put("Germany", "+49");
+        COUNTRY_CODES.put("France", "+33");
+        COUNTRY_CODES.put("Italy", "+39");
         // Add more countries as needed
     }
 
