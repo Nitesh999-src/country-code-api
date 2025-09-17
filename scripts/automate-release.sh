@@ -281,14 +281,24 @@ create_github_release() {
     fi
     
     if command -v gh > /dev/null 2>&1; then
-        # Extract changelog for this version
-        local release_notes=$(awk "/^## \[$version\]/,/^## \[/{if(!/^## \[/ || /^## \[$version\]/) print}" CHANGELOG.md | head -n -1)
+        # Clean the tag name (remove any contamination)
+        local clean_tag=$(echo "$tag_name" | grep -o '^v[0-9]\+\.[0-9]\+\.[0-9]\+' || echo "$tag_name")
         
-        gh release create "$tag_name" \
+        # Extract changelog for this version - more robust approach
+        local release_notes=$(awk "/^## \\[$version\\]/,/^## \\[/{if(!/^## \\[/ || /^## \\[$version\\]/) print}" CHANGELOG.md 2>/dev/null | sed '$d' | head -20)
+        
+        # Fallback release notes if changelog extraction fails
+        if [ -z "$release_notes" ]; then
+            release_notes="Release $version
+
+See the full changelog at: [CHANGELOG.md](./CHANGELOG.md)"
+        fi
+        
+        gh release create "$clean_tag" \
             --title "Release $version" \
             --notes "$release_notes" \
             --generate-notes \
-            target/*.jar || print_warn "Failed to create GitHub release (check gh CLI setup)"
+            target/*.jar 2>/dev/null || print_warn "Failed to create GitHub release (check gh CLI setup)"
     else
         print_warn "GitHub CLI (gh) not found - skipping GitHub release"
         print_info "You can manually create a release at: https://github.com/your-repo/releases/new?tag=$tag_name"
