@@ -10,9 +10,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased] - 2025-09-17
 
 ### 🐛 Bug Fixes
+-  repair GitHub release creation in automation (scripts) ([@Nitesh](https://github.com/Nitesh))
 -  restore bulletproof version extraction in semantic-version.sh (scripts) ([@Nitesh](https://github.com/Nitesh))
 
+### 🔧 Chores
+-  prepare release 1.3.2 (release) ([@Nitesh](https://github.com/Nitesh))
+
 ### 📝 Other Changes
+-  ([@](https://github.com/))
+-  ([@](https://github.com/))
+-  ([@](https://github.com/))
+-  ([@](https://github.com/))
 -  ([@](https://github.com/))
 -  ([@](https://github.com/))
 -  ([@](https://github.com/))
