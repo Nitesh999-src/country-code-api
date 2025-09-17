@@ -101,7 +101,9 @@ while IFS='|' read -r hash date author subject; do
         echo "$category" > "${category_file}_name"
         echo "$commit_entry" >> "$category_file"
     fi
-done < <(git log -n "$COMMITS" --pretty=format:"%H|%ci|%an|%s")
+done <<EOF
+$(git log -n "$COMMITS" --pretty=format:"%H|%ci|%an|%s")
+EOF
 
 for category in "💥 Breaking Changes" "✨ Features" "🐛 Bug Fixes" "⚡ Performance" "♻️ Refactoring" "📚 Documentation" "💄 Styling" "✅ Tests" "🔧 Build/CI" "🧹 Chores" "📝 Other Changes"; do
     category_file="$TEMP_DIR/$(echo "$category" | tr ' ' '_' | tr -d '🐛✨📚💄♻️⚡✅🔧🧹📝💥')"
