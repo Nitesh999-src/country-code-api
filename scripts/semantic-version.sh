@@ -177,21 +177,19 @@ update_pom_version() {
     # Create backup
     cp "$POM_PATH" "$POM_PATH.backup"
     
-    # Update ONLY the project version, never touch parent version
-    # This targets the version that comes after com.example groupId
-    sed -i.tmp '/\<groupId\>com\.example<\/groupId>/{
-        :loop
-        n
-        /<version>/{
-            s|<version>[^<]*</version>|<version>'$snapshot_version'</version>|
-            b done
-        }
-        b loop
-        :done
-    }' "$POM_PATH"
+    # BULLETPROOF version update - only changes the exact project version line
+    # Find line number of project version (after com.example groupId)
+    local project_version_line=$(grep -n -A5 "<groupId>com.example</groupId>" "$POM_PATH" | grep "<version>" | head -1 | cut -d- -f1)
     
-    if [ -f "$POM_PATH.tmp" ]; then
-        rm "$POM_PATH.tmp"
+    if [ -n "$project_version_line" ]; then
+        # Replace ONLY that specific line number
+        sed -i.tmp "${project_version_line}s|<version>[^<]*</version>|<version>$snapshot_version</version>|" "$POM_PATH"
+        if [ -f "$POM_PATH.tmp" ]; then
+            rm "$POM_PATH.tmp"
+        fi
+    else
+        print_error "Could not find project version line to update" >&2
+        return 1
     fi
     
     print_info "Updated pom.xml version to: $snapshot_version" >&2
