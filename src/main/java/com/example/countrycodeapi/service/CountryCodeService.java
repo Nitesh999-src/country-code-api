@@ -15,6 +15,13 @@ public class CountryCodeService {
         COUNTRY_CODES.put("India", "+91");
         COUNTRY_CODES.put("United States", "+1");
         COUNTRY_CODES.put("United Kingdom", "+44");
+        COUNTRY_CODES.put("Canada", "+1");
+        COUNTRY_CODES.put("Australia", "+61");
+        COUNTRY_CODES.put("New Zealand", "+64");
+        COUNTRY_CODES.put("South Africa", "+27");
+        COUNTRY_CODES.put("Brazil", "+55");
+        COUNTRY_CODES.put("Mexico", "+52");
+        COUNTRY_CODES.put("Argentina", "+54");
         // Add more countries as needed
     }
 
