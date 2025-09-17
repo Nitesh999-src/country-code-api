@@ -18,7 +18,7 @@ NC='\033[0m'
 print_info() { echo -e "${GREEN}[INFO]${NC} $1"; }
 print_warn() { echo -e "${YELLOW}[WARN]${NC} $1"; }
 print_error() { echo -e "${RED}[ERROR]${NC} $1"; }
-print_step() { echo -e "${BLUE}[STEP]${NC} $1"; }
+print_step() { echo -e "${BLUE}[STEP]${NC} $1" >&2; }
 print_success() { echo -e "${PURPLE}[SUCCESS]${NC} $1"; }
 
 REPO_ROOT=$(git rev-parse --show-toplevel)
