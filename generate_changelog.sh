@@ -1,0 +1,159 @@
+#!/usr/bin/env bash
+
+# Changelog Generator Script
+# Usage: ./generate_changelog.sh [number_of_commits] [output_file]
+
+set -euo pipefail
+
+DEFAULT_COMMITS=50
+DEFAULT_OUTPUT="CHANGELOG.md"
+REPO_ROOT=$(git rev-parse --show-toplevel)
+
+# Help message
+if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+    echo "Usage: $0 [number_of_commits] [output_file]"
+    exit 0
+fi
+
+COMMITS=${1:-$DEFAULT_COMMITS}
+OUTPUT_FILE=${2:-$DEFAULT_OUTPUT}
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m'
+
+print_status() { echo -e "${GREEN}[INFO]${NC} $1"; }
+print_warning() { echo -e "${YELLOW}[WARNING]${NC} $1"; }
+print_error() { echo -e "${RED}[ERROR]${NC} $1"; }
+
+if ! git rev-parse --git-dir > /dev/null 2>&1; then
+    print_error "Not in a git repository!"
+    exit 1
+fi
+
+REPO_NAME=$(basename "$REPO_ROOT")
+CURRENT_BRANCH=$(git branch --show-current)
+LAST_COMMIT=$(git log -1 --format="%H")
+LAST_COMMIT_SHORT=$(git log -1 --format="%h")
+LAST_COMMIT_DATE=$(git log -1 --format="%ci")
+
+print_status "Generating changelog for repository: $REPO_NAME"
+print_status "Current branch: $CURRENT_BRANCH"
+print_status "Latest commit: $LAST_COMMIT_SHORT ($LAST_COMMIT_DATE)"
+
+TEMP_FILE=$(mktemp)
+
+cat > "$TEMP_FILE" << EOF
+# Changelog
+
+Auto-generated on $(date '+%Y-%m-%d %H:%M:%S')
+
+## Repository Information
+**Repository**: $REPO_NAME
+**Branch**: $CURRENT_BRANCH
+**Latest Commit**: $LAST_COMMIT_SHORT
+**Generated From**: Last $COMMITS commits
+**Current Version (git tag)**: $(git describe --tags --abbrev=0 2>/dev/null || echo "No version tag")
+**Current Version (pom.xml)**: $(grep -m 1 '<version>' "$REPO_ROOT/pom.xml" | sed -E 's/.*<version>([^<]+)<\/version>.*/\1/')
+
+---
+
+EOF
+
+categorize_commit() {
+    local commit_msg="$1"
+    case "$commit_msg" in
+        feat:*) echo "✨ Features" ;;
+        fix:*) echo "🐛 Bug Fixes" ;;
+        docs:*) echo "📚 Documentation" ;;
+        style:*) echo "💄 Styling" ;;
+        refactor:*) echo "♻️ Refactoring" ;;
+        perf:*) echo "⚡ Performance" ;;
+        test:*) echo "✅ Tests" ;;
+        build:*|ci:*|deploy:*) echo "🔧 Build/CI" ;;
+        chore:*) echo "🧹 Chores" ;;
+        breaking:*|BREAKING:*) echo "💥 Breaking Changes" ;;
+        *) echo "📝 Other Changes" ;;
+    esac
+}
+
+print_status "Processing last $COMMITS commits..."
+
+TEMP_DIR=$(mktemp -d)
+CATEGORIES_FILE="$TEMP_DIR/categories"
+touch "$CATEGORIES_FILE"
+
+while IFS='|' read -r hash date author subject; do
+    if [[ -n "$hash" ]]; then
+        category=$(categorize_commit "$subject")
+        category_file="$TEMP_DIR/$(echo "$category" | tr ' ' '_' | tr -d '🐛✨📚💄♻️⚡✅🔧🧹📝💥')"
+        short_hash=${hash:0:7}
+        # macOS and Linux date compatibility
+        if date -d "$date" '+%Y-%m-%d' >/dev/null 2>&1; then
+            formatted_date=$(date -d "$date" '+%Y-%m-%d')
+        else
+            formatted_date=$(date -j -f '%Y-%m-%d %H:%M:%S %z' "$date" '+%Y-%m-%d' 2>/dev/null || echo "$date")
+        fi
+        clean_subject=$(echo "$subject" | sed -E 's/^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|breaking|BREAKING):\\s*//')
+        commit_entry="- **[$short_hash]** $clean_subject ($author - $formatted_date)"
+        echo "$category" > "${category_file}_name"
+        echo "$commit_entry" >> "$category_file"
+    fi
+done < <(git log -n "$COMMITS" --pretty=format:"%H|%ci|%an|%s")
+
+for category in "💥 Breaking Changes" "✨ Features" "🐛 Bug Fixes" "⚡ Performance" "♻️ Refactoring" "📚 Documentation" "💄 Styling" "✅ Tests" "🔧 Build/CI" "🧹 Chores" "📝 Other Changes"; do
+    category_file="$TEMP_DIR/$(echo "$category" | tr ' ' '_' | tr -d '🐛✨📚💄♻️⚡✅🔧🧹📝💥')"
+    if [[ -f "$category_file" ]]; then
+        echo "" >> "$TEMP_FILE"
+        echo "## $category" >> "$TEMP_FILE"
+        echo "" >> "$TEMP_FILE"
+        cat "$category_file" >> "$TEMP_FILE"
+    fi
+done
+
+echo "" >> "$TEMP_FILE"
+echo "---" >> "$TEMP_FILE"
+echo "" >> "$TEMP_FILE"
+echo "## Statistics" >> "$TEMP_FILE"
+echo "" >> "$TEMP_FILE"
+
+TOTAL_FILES_CHANGED=$(git log -n "$COMMITS" --name-only --pretty=format: | sort -u | wc -l | tr -d ' ')
+TOTAL_COMMITS_ANALYZED=$(git log -n "$COMMITS" --oneline | wc -l | tr -d ' ')
+
+echo "- **Total commits analyzed**: $TOTAL_COMMITS_ANALYZED" >> "$TEMP_FILE"
+echo "- **Files changed**: $TOTAL_FILES_CHANGED" >> "$TEMP_FILE"
+
+echo "- **Contributors in this period**:" >> "$TEMP_FILE"
+git log -n "$COMMITS" --pretty=format:"%an" | sort | uniq -c | sort -nr | while read count author; do
+    echo "  - $author: $count commits" >> "$TEMP_FILE"
+done
+
+echo "- **Most frequently changed files**:" >> "$TEMP_FILE"
+git log -n "$COMMITS" --name-only --pretty=format: | grep -v '^$' | sort | uniq -c | sort -nr | head -10 | while read count file; do
+    echo "  - $file: $count changes" >> "$TEMP_FILE"
+done
+
+echo "" >> "$TEMP_FILE"
+echo "---" >> "$TEMP_FILE"
+echo "" >> "$TEMP_FILE"
+echo "Generated by automated changelog script on $(hostname)" >> "$TEMP_FILE"
+echo "" >> "$TEMP_FILE"
+echo "**Full commit history**: \`git log --oneline -n $COMMITS\`" >> "$TEMP_FILE"
+
+mv "$TEMP_FILE" "$OUTPUT_FILE"
+rm -rf "$TEMP_DIR"
+
+print_status "Changelog generated successfully: $OUTPUT_FILE"
+print_status "Total commits processed: $TOTAL_COMMITS_ANALYZED"
+print_status "Total files changed: $TOTAL_FILES_CHANGED"
+
+if [[ "${BASH_SOURCE[0]}" == "hooks" ]] || [[ -n "${GIT_HOOK_CONTEXT:-}" ]]; then
+    if [[ -f "$OUTPUT_FILE" ]]; then
+        git add "$OUTPUT_FILE" 2>/dev/null || true
+        print_status "Changelog added to git staging area"
+    fi
+fi
+
+print_status "✅ Changelog generation complete!"
