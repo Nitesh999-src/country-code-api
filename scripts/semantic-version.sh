@@ -32,46 +32,8 @@ get_current_version() {
         print_error "pom.xml not found at $POM_PATH"
         exit 1
     fi
-    
-    local version=""
-    
-    # Try xmllint first (most reliable)
-    if command -v xmllint > /dev/null 2>&1; then
-        version=$(xmllint --xpath "string(/project/version)" "$POM_PATH" 2>/dev/null || echo "")
-    fi
-    
-    # Fallback to awk/sed if xmllint not available or failed
-    if [ -z "$version" ]; then
-        version=$(awk '
-        /<project[^>]*>/ { in_project = 1; next }
-        /<parent>/ { if (in_project) in_parent = 1; next }
-        /<\/parent>/ { in_parent = 0; next }
-        /<version>/ {
-            if (in_project && !in_parent && !found_version) {
-                gsub(/<[^>]*>/, "")
-                gsub(/^[[:space:]]+|[[:space:]]+$/, "")
-                if (length($0) > 0) {
-                    found_version = 1
-                    print $0
-                    exit
-                }
-            }
-        }
-        ' "$POM_PATH")
-    fi
-    
-    # Final fallback using simple grep/sed - skip parent section
-    if [ -z "$version" ]; then
-        version=$(awk '
-        /<parent>/{parent=1; next} 
-        /<\/parent>/{parent=0; next} 
-        !parent && /<version>/{
-            gsub(/<[^>]*>/, ""); 
-            gsub(/^[[:space:]]*|[[:space:]]*$/, ""); 
-            if(length($0) > 0) {print; exit}
-        }' "$POM_PATH")
-    fi
-    
+    # Simple and reliable: get version that comes after com.example groupId
+    local version=$(sed -n '/<groupId>com.example<\/groupId>/,/<version>/p' "$POM_PATH" | grep '<version>' | sed 's/.*<version>\(.*\)<\/version>.*/\1/' | head -1)
     if [ -z "$version" ]; then
         print_error "Could not extract version from pom.xml"
         return 1
