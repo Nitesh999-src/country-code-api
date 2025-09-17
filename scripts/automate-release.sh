@@ -104,7 +104,7 @@ check_prerequisites() {
 
 # Function to determine version bump
 analyze_version_bump() {
-    print_step "Analyzing commits for version bump..."
+    print_step "Analyzing commits for version bump..." >&2
     
     if [ -n "$FORCE_VERSION" ]; then
         echo "manual"
@@ -130,7 +130,7 @@ update_project_version() {
     
     if [ "$bump_type" = "manual" ]; then
         if [ "$DRY_RUN" = true ]; then
-            print_info "Would update version to: $new_version-SNAPSHOT"
+            print_info "Would update version to: $new_version-SNAPSHOT" >&2
         else
             "$SCRIPTS_DIR/update-pom-version.sh" --version "$new_version" >&2
         fi
@@ -146,7 +146,7 @@ update_project_version() {
             echo "$new_version"
         fi
     else
-        print_warn "No version bump needed based on commit analysis"
+        print_warn "No version bump needed based on commit analysis" >&2
         return 1
     fi
 }

@@ -177,15 +177,21 @@ update_pom_version() {
     # Create backup
     cp "$POM_PATH" "$POM_PATH.backup"
     
-    # Update version in pom.xml
-    if command -v xmllint > /dev/null 2>&1; then
-        # Use xmllint if available (more reliable)
-        sed -i.bak "s|<version>[^<]*</version>|<version>$snapshot_version</version>|" "$POM_PATH"
-        rm "$POM_PATH.bak"
-    else
-        # Fallback to sed with more specific pattern
-        sed -i.bak "0,/<version>[^<]*<\/version>/s/<version>[^<]*<\/version>/<version>$snapshot_version<\/version>/" "$POM_PATH"
-        rm "$POM_PATH.bak"
+    # Update ONLY the project version, never touch parent version
+    # This targets the version that comes after com.example groupId
+    sed -i.tmp '/\<groupId\>com\.example<\/groupId>/{
+        :loop
+        n
+        /<version>/{
+            s|<version>[^<]*</version>|<version>'$snapshot_version'</version>|
+            b done
+        }
+        b loop
+        :done
+    }' "$POM_PATH"
+    
+    if [ -f "$POM_PATH.tmp" ]; then
+        rm "$POM_PATH.tmp"
     fi
     
     print_info "Updated pom.xml version to: $snapshot_version" >&2
