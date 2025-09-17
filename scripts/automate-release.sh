@@ -216,22 +216,23 @@ create_git_tag() {
     fi
     
     # Stage and commit version and changelog changes
-    git add pom.xml CHANGELOG.md
+    git add pom.xml CHANGELOG.md >/dev/null 2>&1
     if git diff --staged --quiet; then
-        print_info "No changes to commit"
+        print_info "No changes to commit" >&2
     else
         git commit -m "chore(release): prepare release $version
 
-[skip ci]"
-        print_info "Committed release preparation changes"
+[skip ci]" >/dev/null 2>&1
+        print_info "Committed release preparation changes" >&2
     fi
     
     # Create annotated tag
     git tag -a "$tag_name" -m "Release version $version
 
-$(head -20 CHANGELOG.md | tail -n +4)"
+$(head -20 CHANGELOG.md | tail -n +4)" >/dev/null 2>&1
     
-    print_info "Created tag: $tag_name"
+    print_info "Created tag: $tag_name" >&2
+    # Return ONLY the clean tag name to stdout
     echo "$tag_name"
 }
 
