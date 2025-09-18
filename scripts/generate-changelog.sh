@@ -58,6 +58,13 @@ get_current_version() {
     echo "$version"
 }
 
+# Function to strip ANSI color codes from text
+strip_ansi_codes() {
+    local text=$1
+    # Remove ANSI escape sequences like [0;34m, [0m, etc.
+    echo "$text" | sed 's/\[[0-9;]*m//g'
+}
+
 # Function to categorize commit messages
 categorize_commit() {
     local subject=$1
@@ -151,6 +158,9 @@ generate_version_section() {
         if has_breaking_changes "$subject" "$body"; then
             breaking_change=" ⚠️ **BREAKING CHANGE**"
         fi
+        
+        # Clean ANSI color codes from subject line
+        subject=$(strip_ansi_codes "$subject")
         
         # Skip commits with empty subjects or authors
         if [ -z "$subject" ] || [ -z "$author" ]; then

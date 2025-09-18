@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 **Current Version**: 0.0.0-SNAPSHOT
 
+## [Unreleased] - 2025-09-18
+
+### 🐛 Bug Fixes
+-  eliminate empty commit entries in changelog generation (changelog) ([@Nitesh](https://github.com/Nitesh))
+
 ## [v1.3.4] - 2025-09-17
 
 ### ✨ Features
@@ -33,7 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -  prepare release 1.3.2 (release) ([@Nitesh](https://github.com/Nitesh))
 -  prepare release 1.3.1 (release) ([@Nitesh](https://github.com/Nitesh))
 -  prepare release 1.3.0 (release) ([@Nitesh](https://github.com/Nitesh))
--  prepare release [0;34m[STEP][0m Updating project version... 1.2.0 (release) ([@Nitesh](https://github.com/Nitesh))
+-  prepare release [STEP] Updating project version... 1.2.0 (release) ([@Nitesh](https://github.com/Nitesh))
 
 ### 📝 Other Changes
 - minor update ([@Nitesh](https://github.com/Nitesh))
@@ -94,7 +99,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### 🔧 Chores
 -  prepare release 1.3.0 (release) ([@Nitesh](https://github.com/Nitesh))
--  prepare release [0;34m[STEP][0m Updating project version... 1.2.0 (release) ([@Nitesh](https://github.com/Nitesh))
+-  prepare release [STEP] Updating project version... 1.2.0 (release) ([@Nitesh](https://github.com/Nitesh))
 
 ### 📝 Other Changes
 - minor update ([@Nitesh](https://github.com/Nitesh))
