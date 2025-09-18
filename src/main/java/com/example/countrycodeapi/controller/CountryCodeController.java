@@ -27,7 +27,35 @@ public class CountryCodeController {
         if (countryCode == null) {
             throw new CountryNotFoundException("Country not found: " + countryName);
         }
-        return ResponseEntity.ok(new CountryCodeResponse(countryCode));
+        // Determine region based on country name (simplified logic)
+        String region = determineRegion(countryName);
+        return ResponseEntity.ok(new CountryCodeResponse(countryName, countryCode, region));
+    }
+    
+    private String determineRegion(String countryName) {
+        switch (countryName.toLowerCase()) {
+            case "india":
+            case "china":
+                return "Asia";
+            case "united states":
+            case "canada":
+            case "mexico":
+            case "brazil":
+            case "argentina":
+                return "Americas";
+            case "united kingdom":
+            case "france":
+            case "germany":
+            case "italy":
+                return "Europe";
+            case "australia":
+            case "new zealand":
+                return "Oceania";
+            case "south africa":
+                return "Africa";
+            default:
+                return "Unknown";
+        }
     }
     
     @GetMapping("/country-codes")

@@ -5,11 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-**Current Version**: 1.3.4-SNAPSHOT
+**Current Version**: 1.4.0-SNAPSHOT
 
 ## [Unreleased] - 2025-09-18
 
+### ✨ Features
+-  add endpoint to retrieve all country codes (api) ([@Nitesh](https://github.com/Nitesh))
+
 ### 🐛 Bug Fixes
+-  add overloaded constructor for better error handling (exception) ([@Nitesh](https://github.com/Nitesh))
+-  replace broken version detection with bulletproof method (changelog) ([@Nitesh](https://github.com/Nitesh))
 -  completely eliminate ESC sequences and debug text (changelog) ([@Nitesh](https://github.com/Nitesh))
 -  strip ANSI color codes from commit messages (changelog) ([@Nitesh](https://github.com/Nitesh))
 -  eliminate empty commit entries in changelog generation (changelog) ([@Nitesh](https://github.com/Nitesh))
@@ -40,7 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -  prepare release 1.3.2 (release) ([@Nitesh](https://github.com/Nitesh))
 -  prepare release 1.3.1 (release) ([@Nitesh](https://github.com/Nitesh))
 -  prepare release 1.3.0 (release) ([@Nitesh](https://github.com/Nitesh))
--  prepare release (release) ([@Nitesh](https://github.com/Nitesh))
+-  prepare release [0;34m[STEP][0m Updating project version... 1.2.0 (release) ([@Nitesh](https://github.com/Nitesh))
 
 ### 📝 Other Changes
 - minor update ([@Nitesh](https://github.com/Nitesh))
@@ -101,7 +106,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### 🔧 Chores
 -  prepare release 1.3.0 (release) ([@Nitesh](https://github.com/Nitesh))
--  prepare release (release) ([@Nitesh](https://github.com/Nitesh))
+-  prepare release [0;34m[STEP][0m Updating project version... 1.2.0 (release) ([@Nitesh](https://github.com/Nitesh))
 
 ### 📝 Other Changes
 - minor update ([@Nitesh](https://github.com/Nitesh))
