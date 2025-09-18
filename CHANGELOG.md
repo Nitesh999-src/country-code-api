@@ -5,16 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-**Current Version**: 1.5.0-SNAPSHOT
+**Current Version**: 1.6.0-SNAPSHOT
 
 ## [Unreleased] - 2025-09-18
 
 ### ✨ Features
--  add comprehensive country name validation system (validation) ([@Nitesh](https://github.com/Nitesh))
+-  integrate comprehensive country validation system (merge) ([@Nitesh](https://github.com/Nitesh))
+-  add health check and info endpoints (health) ([@Nitesh](https://github.com/Nitesh))
 
-## [v1.4.0] - 2025-09-18
+## [v1.5.0] - 2025-09-18
 
 ### ✨ Features
+-  add comprehensive country name validation system (validation) ([@Nitesh](https://github.com/Nitesh))
 -  add endpoint to retrieve all country codes (api) ([@Nitesh](https://github.com/Nitesh))
 -  add European country codes support (service) ([@Nitesh](https://github.com/Nitesh))
 -  added more country codes (service) ([@Nitesh](https://github.com/Nitesh))
@@ -38,6 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -  added versioning scripts (scripts) ([@Nitesh](https://github.com/Nitesh))
 
 ### 🔧 Chores
+-  prepare release 1.5.0 (release) ([@Nitesh](https://github.com/Nitesh))
 -  prepare release 1.4.0 (release) ([@Nitesh](https://github.com/Nitesh))
 -  prepare release 1.3.4 (release) ([@Nitesh](https://github.com/Nitesh))
 -  prepare release 1.3.3 (release) ([@Nitesh](https://github.com/Nitesh))
@@ -55,6 +58,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - added a patch with version 1.0.1 ([@Nitesh](https://github.com/Nitesh))
 - simple api for getting country code ([@Nitesh](https://github.com/Nitesh))
 - Initial commit ([@Nitesh999-src](https://github.com/Nitesh999-src))
+
+## [v1.4.0] - 2025-09-18
+
+### ✨ Features
+-  add comprehensive country name validation system (validation) ([@Nitesh](https://github.com/Nitesh))
+
+### 🔧 Chores
+-  prepare release 1.5.0 (release) ([@Nitesh](https://github.com/Nitesh))
 
 ## [v1.3.4] - 2025-09-17
 
