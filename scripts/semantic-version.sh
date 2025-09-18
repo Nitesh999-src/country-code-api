@@ -6,16 +6,10 @@
 
 set -euo pipefail
 
-# Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-BLUE='\033[0;34m'
-YELLOW='\033[1;33m'
-NC='\033[0m'
-
-print_info() { echo -e "${GREEN}[INFO]${NC} $1"; }
-print_warn() { echo -e "${YELLOW}[WARN]${NC} $1"; }
-print_error() { echo -e "${RED}[ERROR]${NC} $1"; }
+# Print functions for clean output
+print_info() { echo "[INFO] $1"; }
+print_warn() { echo "[WARN] $1"; }
+print_error() { echo "[ERROR] $1"; }
 
 # Check if we're in a git repository
 if ! git rev-parse --git-dir > /dev/null 2>&1; then
@@ -235,7 +229,7 @@ main() {
     local new_version=$(increment_version "$current_version" "$bump_type")
     
     echo "" >&2
-    echo -e "${BLUE}Version Update Summary:${NC}" >&2
+    echo "Version Update Summary:" >&2
     echo "  Current: $current_version-SNAPSHOT" >&2
     echo "  New:     $new_version-SNAPSHOT" >&2
     echo "  Bump:    $bump_type" >&2

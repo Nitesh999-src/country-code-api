@@ -5,16 +5,10 @@
 
 set -euo pipefail
 
-# Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-BLUE='\033[0;34m'
-YELLOW='\033[1;33m'
-NC='\033[0m'
-
-print_info() { echo -e "${GREEN}[INFO]${NC} $1"; }
-print_warn() { echo -e "${YELLOW}[WARN]${NC} $1"; }
-print_error() { echo -e "${RED}[ERROR]${NC} $1"; }
+# Print functions for clean output
+print_info() { echo "[INFO] $1"; }
+print_warn() { echo "[WARN] $1"; }
+print_error() { echo "[ERROR] $1"; }
 
 REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
 POM_PATH="$REPO_ROOT/pom.xml"

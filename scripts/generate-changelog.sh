@@ -6,16 +6,11 @@
 
 set -euo pipefail
 
-# Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-BLUE='\033[0;34m'
-YELLOW='\033[1;33m'
-NC='\033[0m'
+# Print functions for clean output
 
-print_info() { echo -e "${GREEN}[INFO]${NC} $1" >&2; }
-print_warn() { echo -e "${YELLOW}[WARN]${NC} $1"; }
-print_error() { echo -e "${RED}[ERROR]${NC} $1"; }
+print_info() { echo "[INFO] $1" >&2; }
+print_warn() { echo "[WARN] $1"; }
+print_error() { echo "[ERROR] $1"; }
 
 REPO_ROOT=$(git rev-parse --show-toplevel)
 DEFAULT_OUTPUT="CHANGELOG.md"
@@ -47,21 +42,6 @@ get_current_version() {
     echo "$version" | sed 's/-SNAPSHOT//'
 }
 
-# Function to strip ANSI color codes and debug text from text
-strip_ansi_codes() {
-    local text=$1
-    # Remove ANSI escape sequences, control characters, and specific debug patterns
-    echo "$text" | \
-        tr -d '\033' | \
-        sed 's/\[[0-9;]*m//g' | \
-        sed 's/\[STEP\] Updating project version\.\.\. [0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*//g' | \
-        sed 's/\[INFO\][[:space:]]*[^0-9]*//g' | \
-        sed 's/\[WARN\][[:space:]]*[^0-9]*//g' | \
-        sed 's/\[ERROR\][[:space:]]*[^0-9]*//g' | \
-        tr -d '\r\n\t' | \
-        sed 's/[[:space:]]\+/ /g' | \
-        sed 's/^[[:space:]]*//;s/[[:space:]]*$//'
-}
 
 # Function to categorize commit messages
 categorize_commit() {
@@ -156,9 +136,6 @@ generate_version_section() {
         if has_breaking_changes "$subject" "$body"; then
             breaking_change=" ⚠️ **BREAKING CHANGE**"
         fi
-        
-        # Clean ANSI color codes from subject line
-        subject=$(strip_ansi_codes "$subject")
         
         # Skip commits with empty subjects or authors
         if [ -z "$subject" ] || [ -z "$author" ]; then
@@ -420,7 +397,7 @@ main() {
     
     # Show summary
     echo ""
-    echo -e "${BLUE}📊 Changelog Summary:${NC}"
+    echo "📊 Changelog Summary:"
     local total_lines=$(wc -l < "$OUTPUT_FILE")
     local version_count=$(grep -c "^## \[" "$OUTPUT_FILE" || echo "0")
     echo "  📄 Total lines: $total_lines"

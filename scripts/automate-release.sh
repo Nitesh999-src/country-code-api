@@ -15,11 +15,18 @@ PURPLE='\033[0;35m'
 CYAN='\033[0;36m'
 NC='\033[0m'
 
+# Colored functions for terminal display
 print_info() { echo -e "${GREEN}[INFO]${NC} $1"; }
 print_warn() { echo -e "${YELLOW}[WARN]${NC} $1"; }
 print_error() { echo -e "${RED}[ERROR]${NC} $1"; }
 print_step() { echo -e "${BLUE}[STEP]${NC} $1" >&2; }
 print_success() { echo -e "${PURPLE}[SUCCESS]${NC} $1"; }
+
+# Clean functions for captured output (no colors)
+print_info_clean() { echo "[INFO] $1"; }
+print_warn_clean() { echo "[WARN] $1"; }
+print_error_clean() { echo "[ERROR] $1"; }
+print_step_clean() { echo "[STEP] $1"; }
 
 REPO_ROOT=$(git rev-parse --show-toplevel)
 SCRIPTS_DIR="$REPO_ROOT/scripts"
@@ -455,7 +462,7 @@ main() {
     # Show header
     echo -e "${CYAN}╔══════════════════════════════════════════════╗${NC}"
     echo -e "${CYAN}║          AUTOMATED RELEASE WORKFLOW         ║${NC}"
-    echo -e "${CYAN}║      NPM-style semantic release for Maven   ║${NC}"
+    echo -e "${CYAN}║       Automated semantic release for Maven   ║${NC}"
     echo -e "${CYAN}╚══════════════════════════════════════════════╝${NC}"
     echo ""
     
