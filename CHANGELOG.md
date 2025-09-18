@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased] - 2025-09-18
 
 ### 🐛 Bug Fixes
+-  strip ANSI color codes from commit messages (changelog) ([@Nitesh](https://github.com/Nitesh))
 -  eliminate empty commit entries in changelog generation (changelog) ([@Nitesh](https://github.com/Nitesh))
 
 ## [v1.3.4] - 2025-09-17
@@ -38,7 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -  prepare release 1.3.2 (release) ([@Nitesh](https://github.com/Nitesh))
 -  prepare release 1.3.1 (release) ([@Nitesh](https://github.com/Nitesh))
 -  prepare release 1.3.0 (release) ([@Nitesh](https://github.com/Nitesh))
--  prepare release [STEP] Updating project version... 1.2.0 (release) ([@Nitesh](https://github.com/Nitesh))
+-  prepare release (release) ([@Nitesh](https://github.com/Nitesh))
 
 ### 📝 Other Changes
 - minor update ([@Nitesh](https://github.com/Nitesh))
@@ -99,7 +100,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### 🔧 Chores
 -  prepare release 1.3.0 (release) ([@Nitesh](https://github.com/Nitesh))
--  prepare release [STEP] Updating project version... 1.2.0 (release) ([@Nitesh](https://github.com/Nitesh))
+-  prepare release (release) ([@Nitesh](https://github.com/Nitesh))
 
 ### 📝 Other Changes
 - minor update ([@Nitesh](https://github.com/Nitesh))

@@ -58,11 +58,20 @@ get_current_version() {
     echo "$version"
 }
 
-# Function to strip ANSI color codes from text
+# Function to strip ANSI color codes and debug text from text
 strip_ansi_codes() {
     local text=$1
-    # Remove ANSI escape sequences like [0;34m, [0m, etc.
-    echo "$text" | sed 's/\[[0-9;]*m//g'
+    # Remove ANSI escape sequences, control characters, and specific debug patterns
+    echo "$text" | \
+        tr -d '\033' | \
+        sed 's/\[[0-9;]*m//g' | \
+        sed 's/\[STEP\] Updating project version\.\.\. [0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*//g' | \
+        sed 's/\[INFO\][[:space:]]*[^0-9]*//g' | \
+        sed 's/\[WARN\][[:space:]]*[^0-9]*//g' | \
+        sed 's/\[ERROR\][[:space:]]*[^0-9]*//g' | \
+        tr -d '\r\n\t' | \
+        sed 's/[[:space:]]\+/ /g' | \
+        sed 's/^[[:space:]]*//;s/[[:space:]]*$//'
 }
 
 # Function to categorize commit messages
