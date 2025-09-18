@@ -35,27 +35,16 @@ get_current_version() {
         return
     fi
     
-    # Extract version using multiple methods
-    local version=""
-    
-    # Try xmllint first (more reliable)
-    if command -v xmllint > /dev/null 2>&1; then
-        version=$(xmllint --xpath "string(/project/version)" "$pom_path" 2>/dev/null || echo "")
-    fi
-    
-    # Fallback to sed/awk if xmllint not available or failed
-    if [ -z "$version" ]; then
-        version=$(awk '/<project[^>]*>/{project=1} project && /<version>/{gsub(/<[^>]*>/, ""); if(!parent_version && !found_version) {found_version=1; print; exit}} /<parent>/{parent=1} parent && /<version>/{parent_version=$0} /<\/parent>/{parent=0}' "$pom_path")
-    fi
-    
-    # Clean up version (remove whitespace and -SNAPSHOT)
-    version=$(echo "$version" | sed -E 's/^\s+|\s+$//g' | sed 's/-SNAPSHOT//')
+    # Simple and reliable: get version that comes after com.example groupId
+    local version=$(sed -n '/<groupId>com.example<\/groupId>/,/<version>/p' "$pom_path" | grep '<version>' | sed 's/.*<version>\(.*\)<\/version>.*/\1/' | head -1)
     
     if [ -z "$version" ]; then
-        version="0.0.0"
+        echo "0.0.0"
+        return
     fi
     
-    echo "$version"
+    # Remove -SNAPSHOT suffix for processing
+    echo "$version" | sed 's/-SNAPSHOT//'
 }
 
 # Function to strip ANSI color codes and debug text from text
