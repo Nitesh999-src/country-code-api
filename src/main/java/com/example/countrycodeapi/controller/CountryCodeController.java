@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 @RestController
 public class CountryCodeController {
 
@@ -26,5 +28,11 @@ public class CountryCodeController {
             throw new CountryNotFoundException("Country not found: " + countryName);
         }
         return ResponseEntity.ok(new CountryCodeResponse(countryCode));
+    }
+    
+    @GetMapping("/country-codes")
+    public ResponseEntity<Map<String, String>> getAllCountryCodes() {
+        Map<String, String> allCodes = countryCodeService.getAllCountryCodes();
+        return ResponseEntity.ok(allCodes);
     }
 }

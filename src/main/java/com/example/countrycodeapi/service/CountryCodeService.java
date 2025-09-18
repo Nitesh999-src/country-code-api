@@ -35,4 +35,8 @@ public class CountryCodeService {
         }
         return countryCode;
     }
+    
+    public Map<String, String> getAllCountryCodes() {
+        return new HashMap<>(COUNTRY_CODES);
+    }
 }
