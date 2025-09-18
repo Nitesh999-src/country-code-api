@@ -152,9 +152,19 @@ generate_version_section() {
             breaking_change=" ⚠️ **BREAKING CHANGE**"
         fi
         
+        # Skip commits with empty subjects or authors
+        if [ -z "$subject" ] || [ -z "$author" ]; then
+            continue
+        fi
+        
         # Categorize commit
         local category_line=$(categorize_commit "$subject" "$hash" "$author" "$commit_date")
         IFS='|' read -r category clean_subject commit_author commit_hash <<< "$category_line"
+        
+        # Skip if categorization returned empty data
+        if [ -z "$clean_subject" ] || [ -z "$commit_author" ]; then
+            continue
+        fi
         
         local formatted_line="- $clean_subject ([@$commit_author](https://github.com/$commit_author))$breaking_change"
         

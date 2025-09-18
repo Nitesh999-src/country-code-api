@@ -7,24 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 **Current Version**: 0.0.0-SNAPSHOT
 
-## [Unreleased] - 2025-09-17
-
-### 🐛 Bug Fixes
--  eliminate tag name contamination in create_git_tag (scripts) ([@Nitesh](https://github.com/Nitesh))
-
-### 📝 Other Changes
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
-
-## [v1.3.3] - 2025-09-17
+## [v1.3.4] - 2025-09-17
 
 ### ✨ Features
 -  add European country codes support (service) ([@Nitesh](https://github.com/Nitesh))
 -  added more country codes (service) ([@Nitesh](https://github.com/Nitesh))
 
 ### 🐛 Bug Fixes
+-  eliminate tag name contamination in create_git_tag (scripts) ([@Nitesh](https://github.com/Nitesh))
 -  repair GitHub release creation in automation (scripts) ([@Nitesh](https://github.com/Nitesh))
 -  restore bulletproof version extraction in semantic-version.sh (scripts) ([@Nitesh](https://github.com/Nitesh))
 -  eliminate ESC character contamination in output (scripts) ([@Nitesh](https://github.com/Nitesh))
@@ -37,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -  added versioning scripts (scripts) ([@Nitesh](https://github.com/Nitesh))
 
 ### 🔧 Chores
+-  prepare release 1.3.4 (release) ([@Nitesh](https://github.com/Nitesh))
 -  prepare release 1.3.3 (release) ([@Nitesh](https://github.com/Nitesh))
 -  prepare release 1.3.2 (release) ([@Nitesh](https://github.com/Nitesh))
 -  prepare release 1.3.2 (release) ([@Nitesh](https://github.com/Nitesh))
@@ -45,40 +36,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -  prepare release [0;34m[STEP][0m Updating project version... 1.2.0 (release) ([@Nitesh](https://github.com/Nitesh))
 
 ### 📝 Other Changes
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
 - minor update ([@Nitesh](https://github.com/Nitesh))
 - version change added patch ([@Nitesh](https://github.com/Nitesh))
 - updated script with structure ([@Nitesh](https://github.com/Nitesh))
@@ -86,6 +43,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - added a patch with version 1.0.1 ([@Nitesh](https://github.com/Nitesh))
 - simple api for getting country code ([@Nitesh](https://github.com/Nitesh))
 - Initial commit ([@Nitesh999-src](https://github.com/Nitesh999-src))
+
+## [v1.3.3] - 2025-09-17
+
+### 🐛 Bug Fixes
+-  eliminate tag name contamination in create_git_tag (scripts) ([@Nitesh](https://github.com/Nitesh))
+
+### 🔧 Chores
+-  prepare release 1.3.4 (release) ([@Nitesh](https://github.com/Nitesh))
 
 ## [v1.3.2] - 2025-09-17
 
@@ -97,16 +62,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -  prepare release 1.3.3 (release) ([@Nitesh](https://github.com/Nitesh))
 -  prepare release 1.3.2 (release) ([@Nitesh](https://github.com/Nitesh))
 
-### 📝 Other Changes
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
-
 ## [v1.3.1] - 2025-09-17
 
 ### 📚 Documentation
@@ -115,10 +70,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### 🔧 Chores
 -  prepare release 1.3.2 (release) ([@Nitesh](https://github.com/Nitesh))
 
-### 📝 Other Changes
--  ([@](https://github.com/))
--  ([@](https://github.com/))
-
 ## [v1.3.0] - 2025-09-17
 
 ### 🐛 Bug Fixes
@@ -126,14 +77,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### 🔧 Chores
 -  prepare release 1.3.1 (release) ([@Nitesh](https://github.com/Nitesh))
-
-### 📝 Other Changes
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
 
 ## [v1.0.0] - 2025-09-17
 
@@ -154,24 +97,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -  prepare release [0;34m[STEP][0m Updating project version... 1.2.0 (release) ([@Nitesh](https://github.com/Nitesh))
 
 ### 📝 Other Changes
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
--  ([@](https://github.com/))
 - minor update ([@Nitesh](https://github.com/Nitesh))
 - version change added patch ([@Nitesh](https://github.com/Nitesh))
 - updated script with structure ([@Nitesh](https://github.com/Nitesh))
