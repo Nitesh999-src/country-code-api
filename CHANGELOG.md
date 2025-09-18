@@ -5,12 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-**Current Version**: 1.4.0-SNAPSHOT
+**Current Version**: 1.5.0-SNAPSHOT
 
 ## [Unreleased] - 2025-09-18
 
 ### ✨ Features
+-  add comprehensive country name validation system (validation) ([@Nitesh](https://github.com/Nitesh))
+
+## [v1.4.0] - 2025-09-18
+
+### ✨ Features
 -  add endpoint to retrieve all country codes (api) ([@Nitesh](https://github.com/Nitesh))
+-  add European country codes support (service) ([@Nitesh](https://github.com/Nitesh))
+-  added more country codes (service) ([@Nitesh](https://github.com/Nitesh))
 
 ### 🐛 Bug Fixes
 -  add overloaded constructor for better error handling (exception) ([@Nitesh](https://github.com/Nitesh))
@@ -18,14 +25,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -  completely eliminate ESC sequences and debug text (changelog) ([@Nitesh](https://github.com/Nitesh))
 -  strip ANSI color codes from commit messages (changelog) ([@Nitesh](https://github.com/Nitesh))
 -  eliminate empty commit entries in changelog generation (changelog) ([@Nitesh](https://github.com/Nitesh))
-
-## [v1.3.4] - 2025-09-17
-
-### ✨ Features
--  add European country codes support (service) ([@Nitesh](https://github.com/Nitesh))
--  added more country codes (service) ([@Nitesh](https://github.com/Nitesh))
-
-### 🐛 Bug Fixes
 -  eliminate tag name contamination in create_git_tag (scripts) ([@Nitesh](https://github.com/Nitesh))
 -  repair GitHub release creation in automation (scripts) ([@Nitesh](https://github.com/Nitesh))
 -  restore bulletproof version extraction in semantic-version.sh (scripts) ([@Nitesh](https://github.com/Nitesh))
@@ -39,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -  added versioning scripts (scripts) ([@Nitesh](https://github.com/Nitesh))
 
 ### 🔧 Chores
+-  prepare release 1.4.0 (release) ([@Nitesh](https://github.com/Nitesh))
 -  prepare release 1.3.4 (release) ([@Nitesh](https://github.com/Nitesh))
 -  prepare release 1.3.3 (release) ([@Nitesh](https://github.com/Nitesh))
 -  prepare release 1.3.2 (release) ([@Nitesh](https://github.com/Nitesh))
@@ -55,6 +55,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - added a patch with version 1.0.1 ([@Nitesh](https://github.com/Nitesh))
 - simple api for getting country code ([@Nitesh](https://github.com/Nitesh))
 - Initial commit ([@Nitesh999-src](https://github.com/Nitesh999-src))
+
+## [v1.3.4] - 2025-09-17
+
+### ✨ Features
+-  add endpoint to retrieve all country codes (api) ([@Nitesh](https://github.com/Nitesh))
+
+### 🐛 Bug Fixes
+-  add overloaded constructor for better error handling (exception) ([@Nitesh](https://github.com/Nitesh))
+-  replace broken version detection with bulletproof method (changelog) ([@Nitesh](https://github.com/Nitesh))
+-  completely eliminate ESC sequences and debug text (changelog) ([@Nitesh](https://github.com/Nitesh))
+-  strip ANSI color codes from commit messages (changelog) ([@Nitesh](https://github.com/Nitesh))
+-  eliminate empty commit entries in changelog generation (changelog) ([@Nitesh](https://github.com/Nitesh))
+
+### 🔧 Chores
+-  prepare release 1.4.0 (release) ([@Nitesh](https://github.com/Nitesh))
 
 ## [v1.3.3] - 2025-09-17
 
