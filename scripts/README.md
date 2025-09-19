@@ -2,6 +2,340 @@
 
 This directory contains scripts for automated versioning and changelog generation, similar to npm's semantic release workflow.
 
+## 📦 Integration Guide - Use in Your Spring Boot Project
+
+### 🎯 Overview
+
+These automation scripts can be easily integrated into any Spring Boot project to provide NPM-style automated versioning, changelog generation, and releases.
+
+### 🏗️ **Step 1: Copy Scripts Folder**
+
+1. **Copy the entire `scripts/` folder** to your Spring Boot project root:
+
+```
+your-spring-boot-project/
+├── src/
+├── pom.xml
+└── scripts/              ← Copy this entire folder here
+    ├── automate-release.sh
+    ├── generate-changelog.sh
+    ├── semantic-version.sh
+    └── update-pom-version.sh
+```
+
+2. **Make scripts executable:**
+
+```bash
+chmod +x scripts/*.sh
+```
+
+### 🔧 **Step 2: Update pom.xml Dependencies & Profiles**
+
+Add the following to your `pom.xml`:
+
+#### **Required Properties (add to `<properties>` section):**
+
+```xml
+<properties>
+    <java.version>17</java.version>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
+</properties>
+```
+
+#### **Required Plugins (add to `<build><plugins>` section):**
+
+```xml
+<build>
+    <plugins>
+        <!-- Spring Boot Maven Plugin -->
+        <plugin>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
+        </plugin>
+
+        <!-- Versions Maven Plugin - for version management -->
+        <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>versions-maven-plugin</artifactId>
+            <version>2.16.2</version>
+            <configuration>
+                <generateBackupPoms>false</generateBackupPoms>
+            </configuration>
+        </plugin>
+
+        <!-- Maven Release Plugin -->
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-release-plugin</artifactId>
+            <version>3.0.1</version>
+            <configuration>
+                <autoVersionSubmodules>true</autoVersionSubmodules>
+                <useReleaseProfile>false</useReleaseProfile>
+                <releaseProfiles>release</releaseProfiles>
+                <goals>deploy</goals>
+            </configuration>
+        </plugin>
+
+        <!-- Exec Maven Plugin - for running automation scripts -->
+        <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>3.1.1</version>
+            <configuration>
+                <executable>bash</executable>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+```
+
+#### **Required Profiles (add entire `<profiles>` section):**
+
+```xml
+<profiles>
+    <!-- Release Profile -->
+    <profile>
+        <id>release</id>
+        <properties>
+            <maven.test.skip>false</maven.test.skip>
+            <maven.javadoc.skip>false</maven.javadoc.skip>
+        </properties>
+        <build>
+            <plugins>
+                <!-- Run semantic versioning and changelog generation -->
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <id>semantic-version</id>
+                            <phase>validate</phase>
+                            <goals>
+                                <goal>exec</goal>
+                            </goals>
+                            <configuration>
+                                <arguments>
+                                    <argument>scripts/semantic-version.sh</argument>
+                                    <argument>--dry-run</argument>
+                                </arguments>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>generate-full-changelog</id>
+                            <phase>prepare-package</phase>
+                            <goals>
+                                <goal>exec</goal>
+                            </goals>
+                            <configuration>
+                                <arguments>
+                                    <argument>scripts/generate-changelog.sh</argument>
+                                    <argument>CHANGELOG.md</argument>
+                                </arguments>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </build>
+    </profile>
+
+    <!-- Development Profile -->
+    <profile>
+        <id>dev</id>
+        <activation>
+            <activeByDefault>true</activeByDefault>
+        </activation>
+        <build>
+            <plugins>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <id>generate-unreleased-changelog</id>
+                            <phase>compile</phase>
+                            <goals>
+                                <goal>exec</goal>
+                            </goals>
+                            <configuration>
+                                <arguments>
+                                    <argument>scripts/generate-changelog.sh</argument>
+                                    <argument>--unreleased-only</argument>
+                                </arguments>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </build>
+    </profile>
+</profiles>
+```
+
+#### **SCM Configuration (add to root of `<project>`):**
+
+```xml
+<scm>
+    <connection>scm:git:git://github.com/yourusername/your-repo.git</connection>
+    <developerConnection>scm:git:ssh://github.com:yourusername/your-repo.git</developerConnection>
+    <url>http://github.com/yourusername/your-repo/tree/main</url>
+</scm>
+```
+
+### ⚙️ **Step 3: Update Scripts for Your Project**
+
+#### **🎯 Critical: Update GroupId Detection**
+
+**The scripts are currently hardcoded for `com.example` groupId. You MUST update this:**
+
+1. **Edit `scripts/semantic-version.sh`** - Replace line ~33:
+
+```bash
+# OLD (line 33):
+local version=$(sed -n '/<groupId>com.example<\/groupId>/,/<version>/p' "$POM_PATH" | grep '<version>' | sed 's/.*<version>\(.*\)<\/version>.*/\1/' | head -1)
+
+# NEW - Replace com.example with YOUR groupId:
+local version=$(sed -n '/<groupId>YOUR_GROUP_ID<\/groupId>/,/<version>/p' "$POM_PATH" | grep '<version>' | sed 's/.*<version>\(.*\)<\/version>.*/\1/' | head -1)
+```
+
+2. **Edit `scripts/generate-changelog.sh`** - Replace line ~37:
+
+```bash
+# OLD:
+local version=$(sed -n '/<groupId>com.example<\/groupId>/,/<version>/p' "$pom_path" | grep '<version>' | sed 's/.*<version>\(.*\)<\/version>.*/\1/' | head -1)
+
+# NEW - Replace com.example with YOUR groupId:
+local version=$(sed -n '/<groupId>YOUR_GROUP_ID<\/groupId>/,/<version>/p' "$pom_path" | grep '<version>' | sed 's/.*<version>\(.*\)<\/version>.*/\1/' | head -1)
+```
+
+3. **Edit `scripts/update-pom-version.sh`** - Replace line ~40:
+
+```bash
+# OLD:
+local version=$(sed -n '/<groupId>com.example<\/groupId>/,/<version>/p' "$POM_PATH" | grep '<version>' | sed 's/.*<version>\(.*\)<\/version>.*/\1/' | head -1)
+
+# NEW - Replace com.example with YOUR groupId:
+local version=$(sed -n '/<groupId>YOUR_GROUP_ID<\/groupId>/,/<version>/p' "$POM_PATH" | grep '<version>' | sed 's/.*<version>\(.*\)<\/version>.*/\1/' | head -1)
+```
+
+**Example:** If your `pom.xml` has `<groupId>io.mycompany</groupId>`, then use:
+
+```bash
+local version=$(sed -n '/<groupId>io.mycompany<\/groupId>/,/<version>/p' "$POM_PATH" | grep '<version>' | sed 's/.*<version>\(.*\)<\/version>.*/\1/' | head -1)
+```
+
+### 🖥️ **Platform Compatibility**
+
+| Platform        | Status                 | Requirements                          | Notes                   |
+| --------------- | ---------------------- | ------------------------------------- | ----------------------- |
+| **🐧 Linux**    | ✅ **Fully Supported** | `bash`, `git`, `maven`, `grep`, `sed` | **Best performance**    |
+| **🍎 macOS**    | ✅ **Fully Supported** | `bash`, `git`, `maven`, `grep`, `sed` | **Tested platform**     |
+| **🏢 Unix/BSD** | ✅ **Compatible**      | `bash`, `git`, `maven`, `grep`, `sed` | May need minor tweaks   |
+| **🪟 Windows**  | ⚠️ **Requires Setup**  | WSL2 or Git Bash                      | See Windows setup below |
+
+#### **Windows Setup Options:**
+
+**Option 1: WSL2 (Recommended)**
+
+```bash
+# Install Ubuntu on WSL2
+wsl --install
+# Then run all scripts in WSL2 environment
+```
+
+**Option 2: Git Bash**
+
+```bash
+# Use Git Bash terminal
+# Ensure you have Maven and Git in PATH
+# Scripts should work with minor modifications
+```
+
+**Option 3: PowerShell Alternative**
+
+- Consider using the PowerShell equivalent scripts (not included)
+- Or use Docker to run in Linux container
+
+### 🛠️ **Step 4: Initialize Your Project**
+
+1. **Create initial git tag:**
+
+```bash
+git tag v1.0.0
+git push --tags
+```
+
+2. **Test the setup:**
+
+```bash
+./scripts/automate-release.sh --dry-run
+```
+
+3. **Generate first changelog:**
+
+```bash
+./scripts/generate-changelog.sh
+```
+
+### 🎯 **Step 5: Configure GitHub Integration (Optional)**
+
+For automated GitHub releases:
+
+1. **Install GitHub CLI:**
+
+```bash
+# macOS
+brew install gh
+
+# Linux
+sudo apt install gh
+# or
+sudo snap install gh
+```
+
+2. **Authenticate:**
+
+```bash
+gh auth login
+```
+
+3. **Enable in automation:**
+
+```bash
+./scripts/automate-release.sh --github-release --push
+```
+
+### ⚡ **Quick Integration Checklist**
+
+- [ ] Copied `scripts/` folder to project root
+- [ ] Made scripts executable: `chmod +x scripts/*.sh`
+- [ ] Added required plugins to `pom.xml`
+- [ ] Added profiles to `pom.xml`
+- [ ] Updated groupId in all 3 scripts (semantic-version.sh, generate-changelog.sh, update-pom-version.sh)
+- [ ] Added SCM configuration to `pom.xml`
+- [ ] Created initial git tag: `git tag v1.0.0`
+- [ ] Tested with: `./scripts/automate-release.sh --dry-run`
+
+### 🚨 **Common Integration Issues**
+
+| Issue                    | Cause                    | Solution                         |
+| ------------------------ | ------------------------ | -------------------------------- |
+| **Version not found**    | Wrong groupId in scripts | Update groupId in 3 script files |
+| **Permission denied**    | Scripts not executable   | Run `chmod +x scripts/*.sh`      |
+| **Command not found**    | Missing dependencies     | Install `git`, `maven`, `bash`   |
+| **Windows line endings** | CRLF vs LF               | Run `dos2unix scripts/*.sh`      |
+
+### 🎉 **You're Ready!**
+
+After completing these steps, your Spring Boot project will have:
+
+- ✅ **NPM-style semantic versioning**
+- ✅ **Automated changelog generation**
+- ✅ **Integrated Maven workflows**
+- ✅ **GitHub release automation**
+- ✅ **Cross-platform compatibility**
+
 ## 🚀 Quick Start
 
 ### Automated Release (Recommended)
