@@ -92,6 +92,8 @@ Add the following to your `pom.xml`:
 
 #### **Required Profiles (add entire `<profiles>` section):**
 
+> **💡 Note**: The profiles below include automatic script execution during Maven builds. If you prefer **manual-only execution**, comment out the `<executions>` sections in each profile and run scripts manually via terminal.
+
 ```xml
 <profiles>
     <!-- Release Profile -->

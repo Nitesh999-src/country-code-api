@@ -83,8 +83,8 @@
                 <configuration>
                     <executable>bash</executable>
                 </configuration>
+                <!-- COMMENTED OUT: Automatic execution disabled - run scripts manually
                 <executions>
-                    <!-- Generate changelog during package phase -->
                     <execution>
                         <id>generate-changelog</id>
                         <phase>prepare-package</phase>
@@ -98,6 +98,7 @@
                         </configuration>
                     </execution>
                 </executions>
+                -->
             </plugin>
 
             <!-- Maven SCM Plugin - for source control operations -->
@@ -169,6 +170,7 @@
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>exec-maven-plugin</artifactId>
+                        <!-- COMMENTED OUT: Automatic execution disabled - run scripts manually
                         <executions>
                             <execution>
                                 <id>semantic-version</id>
@@ -179,7 +181,7 @@
                                 <configuration>
                                     <arguments>
                                         <argument>scripts/semantic-version.sh</argument>
-                                        <argument>--dry-run</argument>
+                                        <argument>-dry-run</argument>
                                     </arguments>
                                 </configuration>
                             </execution>
@@ -197,6 +199,7 @@
                                 </configuration>
                             </execution>
                         </executions>
+                        -->
                     </plugin>
                 </plugins>
             </build>
@@ -213,6 +216,7 @@
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>exec-maven-plugin</artifactId>
+                        <!-- COMMENTED OUT: Automatic execution disabled - run scripts manually
                         <executions>
                             <execution>
                                 <id>generate-unreleased-changelog</id>
@@ -223,11 +227,12 @@
                                 <configuration>
                                     <arguments>
                                         <argument>scripts/generate-changelog.sh</argument>
-                                        <argument>--unreleased-only</argument>
+                                        <argument>-unreleased-only</argument>
                                     </arguments>
                                 </configuration>
                             </execution>
                         </executions>
+                        -->
                     </plugin>
                 </plugins>
             </build>
